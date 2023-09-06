@@ -8,7 +8,8 @@ h1 {
     }  
   
  body {
-        background-color: rgb(4, 23, 52);  
+        background-color: rgb(4, 23, 52); 
+        font-family: Arial; 
 }
 
 .formstyle { 
@@ -17,9 +18,10 @@ h1 {
     margin: auto;  
     border: 1px solid;  
     border-radius: 5px;  
-    padding: 20px; 
+    padding: 30px; 
     background-color: rgb(4, 23, 52); 
     color: white;
+
 }  
   
   
