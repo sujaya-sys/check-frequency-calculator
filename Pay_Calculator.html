@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>  
+<html lang = "en">  
+<head>  
+<title> Checkly Pay Calculator </title>  
+<link href="StyleSheet.css" rel="stylesheet">
+</head>  
+<body onload="calculate()">  
+
+
+
+
+
+
+<h1> Checkly Pay Calculator </h1>  
+<div class= "formstyle">  
+
+<form onsubmit="return false;" name = "form1">  
+
+<label>Role</label>
+<br>
+
+<select name="role" id="role" onChange="calculate()">
+  <option value="Engineering">Engineering</option>
+  <option value="Design">Design</option>
+  <option value="Product Management">Product Management</option>
+  <option value="Support">Support</option>
+  <option value="Customer Solutions">Customer Solutions</option>
+  <option value="Account Executive">Account Executive</option>
+  <option value="SDR">SDR</option>
+  <option value="People">People</option>
+  <option value="Operations">Operations</option>
+  <option value="Product Marketing">Product Marketing</option>
+  <option value="DevRel">DevRel</option>
+  <option value="Leadership">Leadership</option>
+</select>
+
+<br>
+<br>
+
+<label>Seniority</label>
+<br>
+
+<select name="seniority" id="seniority" onChange="calculate()">
+  <option value="Junior">Junior</option>
+  <option value="Intermediate">Intermediate</option>
+  <option value="Senior">Senior</option>
+  <option value="Staff">Staff</option>
+  <option value="Lead">Lead</option>
+  <option value="Director">Director</option>
+  <option value="C-Suite">C-Suite</option>
+</select>     
+
+<br>
+<br>
+
+<label>Performance</label>
+<br>
+
+<select name="performanceFactor" id="performanceFactor" onChange="calculate()">
+  <option value="0.9">Learning</option>
+  <option value="1">Comfortable</option>
+  <option value="1.1">Thriving</option>
+</select>     
+
+<br>
+<br>
+
+<label>Location</label>
+<br>
+
+<select name="locationFactor" id="locationFactor" onChange="calculate()">
+  <option value="0.9">Argentina</option>
+  <option value="1">Austria</option>
+  <option value="1">Belgium</option>
+  <option value="1">France</option>
+  <option value="1">Germany</option>
+  <option value="1">Ireland</option>
+  <option value="1">Netherlands</option>
+  <option value="0.9">Poland</option>
+  <option value="0.9">Portugal</option>
+  <option value="0.9">Romania</option>
+  <option value="0.9">Serbia</option>
+  <option value="1">Spain</option>
+  <option value="1">Sweden</option>
+  <option value="0.9">Turkey</option>
+  <option value="0.9">Ukraine</option>
+  <option value="1">UK</option>
+  <option value="1.2">USA</option>
+  <option value="1.5">USA: Austin</option>
+  <option value="1.5">USA: Boston</option>
+  <option value="1.5">USA: Los Angeles</option>
+  <option value="1.5">USA: New York City</option>
+  <option value="1.5">USA: San Francisco</option>
+  <option value="1.5">USA: Seattle</option>
+  <option value="1.5">USA: Washington</option>
+</select>     
+
+<br>
+<br>
+
+
+
+
+<label> Annual salary: EUR</label> <label id="SalaryInEUR" ></label> <label> / USD</label> <label id="SalaryInUSD" ></label>
+
+<br>
+
+<script>
+
+   function numberWithCommas(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+   }
+
+   function calculate() {
+
+   var role = document.getElementById("role").value;
+   var seniority = document.getElementById("seniority").value;
+   var locationFactor = document.getElementById("locationFactor").value;
+   var performanceFactor = document.getElementById("performanceFactor").value;
+  
+
+   var  salaries= [
+       {role:"Engineering", seniority:"Junior", salary: "52500"},
+       {role:"Engineering", seniority:"Intermediate", salary: "70000"},
+       {role:"Engineering", seniority:"Senior", salary: "87500"},
+       {role:"Engineering", seniority:"Staff", salary: "122625"},
+       {role:"Engineering", seniority:"Lead", salary: "98100"},
+       {role:"Engineering", seniority:"Director", salary: "131300"},
+       {role:"Design", seniority:"Junior", salary: "46500"},
+       {role:"Design", seniority:"Intermediate", salary: "62000"},
+       {role:"Design", seniority:"Senior", salary: "77500"},
+       {role:"Design", seniority:"Lead", salary: "104444.44"},
+       {role:"Product Management", seniority:"Junior", salary: "56250"},
+       {role:"Product Management", seniority:"Intermediate", salary: "75000"},
+       {role:"Product Management", seniority:"Senior", salary: "93750"},
+       {role:"Support", seniority:"Junior", salary: "48750"},
+       {role:"Support", seniority:"Intermediate", salary: "65000"},
+       {role:"Support", seniority:"Senior", salary: "81250"},
+       {role:"Customer Solutions", seniority:"Junior", salary: "68188"},
+       {role:"Customer Solutions", seniority:"Intermediate", salary: "90917"},
+       {role:"Customer Solutions", seniority:"Senior", salary: "113646"},
+       {role:"Account Executive", seniority:"Junior", salary: "75000"},
+       {role:"Account Executive", seniority:"Intermediate", salary: "100000"},
+       {role:"Account Executive", seniority:"Senior", salary: "125000"},
+       {role:"SDR", seniority:"Junior", salary: "33750"},
+       {role:"SDR", seniority:"Intermediate", salary: "45000"},
+       {role:"SDR", seniority:"Senior", salary: "56250"},
+       {role:"People", seniority:"Director", salary: "104000"},
+       {role:"Operations", seniority:"Director", salary: "113000"},
+       {role:"Product Marketing", seniority:"Junior", salary: "62250"},
+       {role:"Product Marketing", seniority:"Intermediate", salary: "83000"},
+       {role:"Product Marketing", seniority:"Senior", salary: "103750"},
+       {role:"DevRel", seniority:"Lead", salary: "125000"},
+       {role:"Leadership", seniority:"C-Suite", salary: "110000"}
+   ];
+
+
+	for (var r in salaries) {
+
+	   if (salaries[r]["role"] == role && salaries[r]["seniority"] == seniority ) {
+
+		var salaryInEUR = salaries[r]["salary"] * performanceFactor * locationFactor;
+
+		document.getElementById('SalaryInEUR').innerHTML = numberWithCommas(Math.trunc(salaryInEUR));
+		document.getElementById('SalaryInUSD').innerHTML = numberWithCommas(Math.trunc(salaryInEUR * 1.089905));
+		break;
+	   } 
+
+	   document.getElementById('SalaryInEUR').innerHTML = "[undefined combination]";
+	   document.getElementById('SalaryInUSD').innerHTML = "[undefined combination]";
+
+	}
+
+   }
+</script>
+    
+
+</form>  
+
+
+</div>  
+</body>  
+</html>  
