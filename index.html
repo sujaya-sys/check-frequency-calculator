@@ -2,9 +2,9 @@
 <!DOCTYPE html>  
 <html lang = "en">  
 <head>  
-<center><img src="checkly-logo-dark.svg" alt="Checkly logo"></center>
-<title> Checkly Pay Calculator </title>  
-<link href="StyleSheet.css" rel="stylesheet">
+  <center><img src="checkly-logo-dark.svg" alt="Checkly logo"></center>
+  <title> Checkly Pay Calculator </title>  
+  <link href="StyleSheet.css" rel="stylesheet">
 </head>  
 <body onload="calculate()">  
 
@@ -104,7 +104,7 @@
 
 
 <label> Annual salary: EUR</label> <label id="SalaryInEUR" ></label> <label> / USD</label> <label id="SalaryInUSD" ></label>
-
+<div id="Message"> </div>
 <br>
 
 <script>
@@ -165,11 +165,15 @@
 
 		document.getElementById('SalaryInEUR').innerHTML = numberWithCommas(Math.trunc(salaryInEUR));
 		document.getElementById('SalaryInUSD').innerHTML = numberWithCommas(Math.trunc(salaryInEUR * 1.089905));
-		break;
-	   } 
+    document.getElementById('Message').innerHTML = "";break
+	   } else{
+      document.getElementById('SalaryInEUR').innerHTML = "N/A";
+      document.getElementById('Message').innerHTML = "Unfortunaly we don't have this combination of role and seniority, so we can't give you a salary amount.";
+      document.getElementById('SalaryInUSD').innerHTML = "N/A";
 
-	   document.getElementById('SalaryInEUR').innerHTML = "[undefined combination]";
-	   document.getElementById('SalaryInUSD').innerHTML = "[undefined combination]";
+     }
+
+	   
 
 	}
 
