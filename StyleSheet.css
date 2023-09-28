@@ -12,6 +12,15 @@ h1 {
         font-family: Arial; 
 }
 
+p {
+    text-align: center;
+    color: white;
+}
+
+a {
+    color: #0075FF;
+}
+
 .formstyle { 
     width: 300px;  
     margin: auto;  
