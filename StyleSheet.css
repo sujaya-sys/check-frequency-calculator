@@ -37,3 +37,18 @@ a {
 }  
 
   
+.entry {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.entry-label  {
+    display: flex;
+    align-items: center;
+}
+
+.entry-dropdown  {
+    width: 50%;
+    height: 30px;
+}

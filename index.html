@@ -17,85 +17,87 @@
 <div class= "formstyle">  
 
 <form onsubmit="return false;" name = "form1">  
-
-<label>Role</label>
-<br>
-
-<select name="role" id="role" onChange="calculate()">
-  <option value="Engineering">Engineering</option>
-  <option value="Design">Design</option>
-  <option value="Product Management">Product Management</option>
-  <option value="Support Engineer">Support Engineer</option>
-  <option value="Customer Solutions">Customer Solutions</option>
-  <option value="Account Executive">Account Executive</option>
-  <option value="SDR">SDR</option>
-  <option value="People">People</option>
-  <option value="Operations">Operations</option>
-  <option value="Product Marketing">Product Marketing</option>
-  <option value="Digital Marketing">Digital Marketing</option>
-  <option value="DevRel">DevRel</option>
-</select>
-
-<br>
-<br>
-
-<label>Seniority</label>
-<br>
-
-<select name="seniority" id="seniority" onChange="calculate()">
-  <option value="Junior">Junior</option>
-  <option value="Intermediate">Intermediate</option>
-  <option value="Senior">Senior</option>
-  <option value="Staff">Staff</option>
-  <option value="Lead">Lead</option>
-  <option value="Director">Director</option>
-</select>     
+<div class="entry">
+  <label class="entry-label">Role</label>
+  <select class="entry-dropdown" name="role" id="role" onChange="calculate()">
+    <option value="Engineering">Engineering</option>
+    <option value="Design">Design</option>
+    <option value="Product Management">Product Management</option>
+    <option value="Support Engineer">Support Engineer</option>
+    <option value="Customer Solutions">Customer Solutions</option>
+    <option value="Account Executive">Account Executive</option>
+    <option value="SDR">SDR</option>
+    <option value="People">People</option>
+    <option value="Operations">Operations</option>
+    <option value="Product Marketing">Product Marketing</option>
+    <option value="Digital Marketing">Digital Marketing</option>
+    <option value="DevRel">DevRel</option>
+  </select>
+</div>
 
 <br>
 <br>
 
-<label>Performance</label>
+<div class="entry">
+  <label class="entry-label">Seniority</label>
+  <select class="entry-dropdown" name="seniority" id="seniority" onChange="calculate()">
+    <option value="Junior">Junior</option>
+    <option value="Intermediate">Intermediate</option>
+    <option value="Senior">Senior</option>
+    <option value="Staff">Staff</option>
+    <option value="Lead">Lead</option>
+    <option value="Director">Director</option>
+  </select>    
+</div>
+
+
+<br>
+<br>
+<div class="entry">
+  <label class="entry-label">Performance</label>
+
+  <select class="entry-dropdown" name="performanceFactor" id="performanceFactor" onChange="calculate()">
+    <option value="0.9">Learning</option>
+    <option value="1">Comfortable</option>
+    <option value="1.1">Thriving</option>
+  </select>     
+</div>
+
+<br>
 <br>
 
-<select name="performanceFactor" id="performanceFactor" onChange="calculate()">
-  <option value="0.9">Learning</option>
-  <option value="1">Comfortable</option>
-  <option value="1.1">Thriving</option>
-</select>     
 
-<br>
-<br>
+<div class="entry">
+  <label class="entry-label">Location</label>
+  <select class="entry-dropdown" name="locationFactor" id="locationFactor" onChange="calculate()">
+    <option value="0.9">Argentina</option>
+    <option value="1">Austria</option>
+    <option value="1">Belgium</option>
+    <option value="0.9">Bulgaria</option>
+    <option value="1">France</option>
+    <option value="1">Germany</option>
+    <option value="1">Ireland</option>
+    <option value="1">Netherlands</option>
+    <option value="0.9">Poland</option>
+    <option value="0.9">Portugal</option>
+    <option value="0.9">Romania</option>
+    <option value="0.9">Serbia</option>
+    <option value="0.9">Spain</option>
+    <option value="1">Sweden</option>
+    <option value="0.9">Turkey</option>
+    <option value="0.9">Ukraine</option>
+    <option value="1">UK</option>
+    <option value="1.2">USA</option>
+    <option value="1.5">USA: Austin</option>
+    <option value="1.5">USA: Boston</option>
+    <option value="1.5">USA: Los Angeles</option>
+    <option value="1.5">USA: New York City</option>
+    <option value="1.5">USA: San Francisco</option>
+    <option value="1.5">USA: Seattle</option>
+    <option value="1.5">USA: Washington</option>
+  </select>   
+</div>
 
-<label>Location</label>
-<br>
-
-<select name="locationFactor" id="locationFactor" onChange="calculate()">
-  <option value="0.9">Argentina</option>
-  <option value="1">Austria</option>
-  <option value="1">Belgium</option>
-  <option value="0.9">Bulgaria</option>
-  <option value="1">France</option>
-  <option value="1">Germany</option>
-  <option value="1">Ireland</option>
-  <option value="1">Netherlands</option>
-  <option value="0.9">Poland</option>
-  <option value="0.9">Portugal</option>
-  <option value="0.9">Romania</option>
-  <option value="0.9">Serbia</option>
-  <option value="0.9">Spain</option>
-  <option value="1">Sweden</option>
-  <option value="0.9">Turkey</option>
-  <option value="0.9">Ukraine</option>
-  <option value="1">UK</option>
-  <option value="1.2">USA</option>
-  <option value="1.5">USA: Austin</option>
-  <option value="1.5">USA: Boston</option>
-  <option value="1.5">USA: Los Angeles</option>
-  <option value="1.5">USA: New York City</option>
-  <option value="1.5">USA: San Francisco</option>
-  <option value="1.5">USA: Seattle</option>
-  <option value="1.5">USA: Washington</option>
-</select>     
 
 <br>
 <br>
@@ -105,7 +107,21 @@
 
 <label> Annual salary: EUR</label> <label id="SalaryInEUR" ></label> <label> / USD</label> <label id="SalaryInUSD" ></label>
 <div id="Message"> </div>
+
+
+</form>  
+
+</div>  
+
 <br>
+
+<p> Check out our <a href="https://www.notion.so/checkly/Our-Pay-Calculator-How-we-pay-our-team-f3c42feab82b444a9cbf8fed545cb727">Pay Calculator documentation</a>. </p> 
+<p> If you have questions about our Pay Calculator, please reach out to <a href="https://www.linkedin.com/in/kaylie-boogaerts-72167040/">Kaylie Boogaerts on LinkedIn</a>.</p>
+
+
+
+</body>  
+</html>  
 
 <script>
 
@@ -155,39 +171,25 @@
    ];
 
 
-	for (var r in salaries) {
+  for (var r in salaries) {
 
-	   if (salaries[r]["role"] == role && salaries[r]["seniority"] == seniority ) {
+     if (salaries[r]["role"] == role && salaries[r]["seniority"] == seniority ) {
 
-		var salaryInEUR = salaries[r]["salary"] * performanceFactor * locationFactor;
+    var salaryInEUR = salaries[r]["salary"] * performanceFactor * locationFactor;
 
-		document.getElementById('SalaryInEUR').innerHTML = numberWithCommas(Math.trunc(salaryInEUR));
-		document.getElementById('SalaryInUSD').innerHTML = numberWithCommas(Math.trunc(salaryInEUR * 1.081485));
+    document.getElementById('SalaryInEUR').innerHTML = numberWithCommas(Math.trunc(salaryInEUR));
+    document.getElementById('SalaryInUSD').innerHTML = numberWithCommas(Math.trunc(salaryInEUR * 1.081485));
     document.getElementById('Message').innerHTML = "";break
-	   } else{
+     } else{
       document.getElementById('SalaryInEUR').innerHTML = "N/A";
       document.getElementById('Message').innerHTML = "Unfortunaly we don't have this combination of role and seniority, so we can't give you a salary amount.";
       document.getElementById('SalaryInUSD').innerHTML = "N/A";
 
      }
 
-	   
+     
 
-	}
+  }
 
    }
 </script>
-
-</form>  
-
-</div>  
-
-<br>
-
-<p> Check out our <a href="https://www.notion.so/checkly/Our-Pay-Calculator-How-we-pay-our-team-f3c42feab82b444a9cbf8fed545cb727">Pay Calculator documentation</a>. </p> 
-<p> If you have questions about our Pay Calculator, please reach out to <a href="https://www.linkedin.com/in/kaylie-boogaerts-72167040/">Kaylie Boogaerts on LinkedIn</a>.</p>
-
-
-
-</body>  
-</html>  
