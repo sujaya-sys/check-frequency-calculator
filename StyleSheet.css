@@ -1,15 +1,16 @@
-
-h1 {  
-    text-align: center;  
-    padding: 144;  
-    background-color: rgb(4, 23, 52);  
-    color: white; 
+h1 {
+    text-align: center;
+    padding: 144;
+    background-color: rgb(4, 23, 52);
+    color: white;
     font-size: 36px;
-    }  
-  
- body {
-        background-color: rgb(4, 23, 52); 
-        font-family: Arial; 
+}
+
+body {
+    background-color: rgb(4, 23, 52);
+    font-family: Arial;
+    margin: 0;
+    padding: 0;
 }
 
 p {
@@ -21,34 +22,139 @@ a {
     color: #0075FF;
 }
 
-.formstyle { 
-    width: 300px;  
-    margin: auto;  
-    border: 1px solid;  
-    border-radius: 5px;  
-    padding: 30px; 
-    background-color: rgb(4, 23, 52); 
-    color: white;
-
-}  
-  
-#Message {
-    margin-top: 30px;
-}  
-
-  
-.entry {
+.container {
     display: flex;
-    justify-content: space-between;
-    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
 }
 
-.entry-label  {
+.form-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    max-width: 900px;
+    background-color: #1b2b46;
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #4a5c77;
+}
+
+.formstyle {
+    background-color: rgb(4, 23, 52);
+    color: white;
+}
+
+.input-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 300px;
+}
+
+.entry {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.entry-label {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.description {
+    font-size: 12px;
+    color: #b0b0b0; 
+    margin-bottom: 5px;
+}
+
+.input-group {
     display: flex;
     align-items: center;
 }
 
-.entry-dropdown  {
-    width: 50%;
-    height: 30px;
+.input-group input, .input-group .result-display {
+    flex: 1; 
+    padding: 8px; 
+    font-size: 14px;
+    border: 1px solid #ccc;
+    box-sizing: border-box; 
+    border-radius: 3px 0 0 3px; 
+    max-width: 100%; 
+}
+
+.input-group input {
+    background-color: #fff; 
+    color: #000; 
+}
+
+.input-group .result-display {
+    background-color: #444; 
+    color: #ddd; 
+}
+
+.unit {
+    font-size: 14px;
+    color: #ccc;
+    padding: 8px;
+    background-color: #333;
+    border: 1px solid #ccc;
+    border-left: none;
+    border-radius: 0 3px 3px 0;
+}
+
+.input-section .entry {
+    border: 1px solid #4a5c77;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #2a3b5e;
+}
+
+.highlight-section {
+    background-color: #283d5c;
+    border: 1px solid #4a5c77;
+    border-radius: 5px;
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.highlight-section h2 {
+    font-size: 24px;
+    color: #00cc99;
+    margin-bottom: 10px;
+}
+
+.frequency-result {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 15px;
+}
+
+.check-support {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.check-type {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #fff;
+    padding: 5px 10px;
+    background-color: #333;
+    border-radius: 5px;
+}
+
+.support-icon {
+    font-size: 20px; 
+    color: #00cc99; 
 }

@@ -3,102 +3,92 @@
 <html lang = "en">  
 <head>  
   <center><img src="checkly-logo-dark.svg" alt="Checkly logo"></center>
-  <title> Checkly Pay Calculator </title>  
+  <title>Check Frequency Calculator</title>  
   <link href="StyleSheet.css" rel="stylesheet">
 </head>  
 <body onload="calculate()">  
 
 
-
-
-
-
-<h1> Pay Calculator </h1>  
-<div class= "formstyle">  
-
-<form onsubmit="return false;" name = "form1">  
-<div class="entry">
-  <label class="entry-label">Role</label>
-  <select class="entry-dropdown" name="role" id="role" onChange="calculate()">
-    <option value="Engineering">Engineering</option>
-    <option value="Design">Design</option>
-    <option value="Product Management">Product Management</option>
-    <option value="Support Engineer">Support Engineer</option>
-    <option value="SDR">SDR</option>
-    <option value="Account Executive">Account Executive</option>
-    <option value="Customer Solutions">Customer Solutions</option>
-    <option value="People">People</option>
-    <option value="Operations">Operations</option>
-    <option value="Product Marketing">Product Marketing</option>
-    <option value="Growth Marketing">Growth Marketing</option>
-    <option value="DevRel">DevRel</option>
-  </select>
-</div>
-
-<br>
-<br>
-
-<div class="entry">
-  <label class="entry-label">Seniority</label>
-  <select class="entry-dropdown" name="seniority" id="seniority" onChange="calculate()">
-    <option value="Junior">Junior</option>
-    <option value="Intermediate">Intermediate</option>
-    <option value="Senior">Senior</option>
-    <option value="Staff">Staff</option>
-    <option value="Lead">Lead</option>
-    <option value="Director">Director</option>
-  </select>    
-</div>
-
-
-<br>
-<br>
-<div class="entry">
-  <label class="entry-label">Performance</label>
-
-  <select class="entry-dropdown" name="performanceFactor" id="performanceFactor" onChange="calculate()">
-    <option value="0.9">Learning</option>
-    <option value="1">Comfortable</option>
-    <option value="1.1">Thriving</option>
-  </select>     
-</div>
-
-<br>
-<br>
-
-
-<div class="entry">
-  <label class="entry-label">Location</label>
-  <select class="entry-dropdown" name="locationFactor" id="locationFactor" onChange="calculate()">
-    <option value="0.9">Argentina</option>
-    <option value="1">Austria</option>
-    <option value="1">Belgium</option>
-    <option value="0.9">Bulgaria</option>
-    <option value="1">France</option>
-    <option value="1">Germany</option>
-    <option value="1">Ireland</option>
-    <option value="1">Netherlands</option>
-    <option value="0.9">Poland</option>
-    <option value="0.9">Portugal</option>
-    <option value="0.9">Romania</option>
-    <option value="0.9">Serbia</option>
-    <option value="0.9">Spain</option>
-    <option value="1">Sweden</option>
-    <option value="0.9">Türkiye</option>
-    <option value="0.9">Ukraine</option>
-    <option value="1">UK</option>
-    <option value="1.2">USA</option>
-    <option value="1.5">USA: Austin</option>
-    <option value="1.5">USA: Boston</option>
-    <option value="1.5">USA: Los Angeles</option>
-    <option value="1.5">USA: New York City</option>
-    <option value="1.5">USA: San Francisco</option>
-    <option value="1.5">USA: Seattle</option>
-    <option value="1.5">USA: Washington</option>
-  </select>   
-</div>
-
-
+  <h1>Check Frequency Calculator</h1>
+  <div class="container">
+      <!-- Input and Results Sections -->
+      <div class="form-content">
+          <div class="formstyle">
+              <!-- Input Fields Section -->
+              <form onsubmit="return false;" name="form1">
+                  <div class="input-section">
+                      <div class="entry">
+                          <label class="entry-label">SLA Level*</label>
+                          <small class="description">Target service uptime percentage</small>
+                          <div class="input-group">
+                              <input type="text" name="sla-level">
+                              <span class="unit">%</span>
+                          </div>
+                      </div>
+  
+                      <div class="entry">
+                          <label class="entry-label">Allowed Downtime</label>
+                          <small class="description">Maximum monthly downtime as per SLA</small>
+                          <div class="input-group">
+                              <span class="result-display" id="downtime-value">0</span> <!-- Calculated value dynamically -->
+                              <span class="unit">min/month</span>
+                          </div>
+                      </div>
+  
+                      <div class="entry">
+                          <label class="entry-label">Incidents</label>
+                          <small class="description">Average number of incidents per month</small>
+                          <div class="input-group">
+                              <input type="text" name="incidents">
+                              <span class="unit">count/month</span>
+                          </div>
+                      </div>
+  
+                      <div class="entry">
+                          <label class="entry-label">TRR (Time to Recovery)</label>
+                          <small class="description">Average time to resolve each incident in minutes</small>
+                          <div class="input-group">
+                              <input type="text" name="trr">
+                              <span class="unit">min</span>
+                          </div>
+                      </div>
+  
+                      <div class="entry">
+                          <label class="entry-label">Actual Downtime</label>
+                          <small class="description">Total downtime for the month</small>
+                          <div class="input-group">
+                              <span class="result-display" id="downtime-value"></span> <!-- Calculated value dynamically -->
+                              <span class="unit">min/month</span>
+                          </div>
+                      </div>
+                  </div>
+              </form>
+          </div>
+  
+          <!-- Check Frequency Section -->
+          <div class="highlight-section">
+              <h2>Check Frequency</h2>
+              <small class="description">The optimal interval for your monitoring checks</small>
+              <div class="frequency-result">
+                  <span id="check-frequency">5</span> <!-- Calculated frequency dynamically -->
+                  <span class="unit">min interval</span>
+              </div>
+              <div class="check-support">
+                  <div class="check-type">
+                      <span>API Checks</span>
+                      <span class="support-icon">✔️</span> <!-- Update dynamically -->
+                  </div>
+                  <div class="check-type">
+                      <span>Browser Checks</span>
+                      <span class="support-icon">❌</span> <!-- Update dynamically -->
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  
+  
+  
 <br>
 <br>
 
@@ -112,13 +102,6 @@
 </form>  
 
 </div>  
-
-<br>
-
-<p> Check out our <a href="https://www.notion.so/checkly/Our-Pay-Calculator-How-we-pay-our-team-f3c42feab82b444a9cbf8fed545cb727">Pay Calculator documentation</a>. </p> 
-<p> If you have questions about our Pay Calculator, please reach out to <a href="https://www.linkedin.com/in/kaylie-boogaerts-72167040/">Kaylie Boogaerts on LinkedIn</a>.</p>
-
-
 
 </body>  
 </html>  
