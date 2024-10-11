@@ -21,7 +21,7 @@
                             <label class="entry-label">SLA Level</label>
                             <small class="description">Target service uptime percentage</small>
                             <div class="input-group">
-                                <input type="text" id="sla-level" name="sla-level" placeholder="0">
+                                <input type="text" id="sla-level" name="sla-level">
                                 <span class="unit">%</span>
                             </div>
                         </div>
@@ -30,7 +30,7 @@
                             <label class="entry-label">Incidents</label>
                             <small class="description">Estimated amount of incidents</small>
                             <div class="input-group">
-                                <input type="text" id="incidents" name="incidents" placeholder="0">
+                                <input type="text" id="incidents" name="incidents">
                                 <span class="unit">per month</span>
                             </div>
                         </div>
@@ -39,7 +39,7 @@
                             <label class="entry-label">Time to Recovery</label>
                             <small class="description">Estimated time to resolve an incident</small>
                             <div class="input-group">
-                                <input type="text" id="ttr" name="ttr" placeholder="0">
+                                <input type="text" id="ttr" name="ttr">
                                 <span class="unit">minute(s)</span>
                             </div>
                         </div>
@@ -48,7 +48,7 @@
                             <label class="entry-label">Time to Detect</label>
                             <small class="description">Maximum TTD equaling check frequency</small>
                             <div class="input-group">
-                                <input type="text" id="ttd" name="ttd" placeholder="0">
+                                <input type="text" id="ttd" name="ttd">
                                 <span class="unit">minute(s)</span>
                             </div>
                         </div>
@@ -124,7 +124,7 @@ function formatDuration(totalMinutes) {
 function calculate() {
     // Retrieve input values
     let slaLevel = parseFloat(document.getElementById('sla-level').value);
-    let incidents = parseInt(document.getElementById('incidents').value);
+    let incidentsInput = document.getElementById('incidents').value;
     let ttr = parseFloat(document.getElementById('ttr').value);
     let ttd = parseFloat(document.getElementById('ttd').value);
 
@@ -140,8 +140,15 @@ function calculate() {
         // Calculate initial Error Budget based on SLA Level
         errorBudget = ((100 - slaLevel) / 100) * totalMinutesPerMonth;
 
-        // Validate and set incidents, ttr, ttd to zero if invalid
-        if (isNaN(incidents) || incidents < 0) incidents = 0;
+        // Validate and set incidents to 1 if input is empty
+        let incidents = parseInt(incidentsInput);
+        if (incidentsInput.trim() === '') {
+            incidents = 1;
+        } else if (isNaN(incidents) || incidents < 0) {
+            incidents = 1;
+        }
+
+        // Validate TTR and TTD
         if (isNaN(ttr) || ttr < 0) ttr = 0;
         if (isNaN(ttd) || ttd < 0) ttd = 0;
 
