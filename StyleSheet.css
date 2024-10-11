@@ -124,7 +124,7 @@ a {
 
 .highlight-section h2 {
     font-size: 24px;
-    color: #00cc99;
+    color: #CCCCCC;
     margin-bottom: 10px;
 }
 
@@ -157,4 +157,8 @@ a {
 .support-icon {
     font-size: 20px; 
     color: #00cc99; 
+}
+
+.negative-budget {
+    color: #ff4d4f;
 }

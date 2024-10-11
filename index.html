@@ -1,194 +1,198 @@
-
 <!DOCTYPE html>  
-<html lang = "en">  
+<html lang="en">
 <head>  
-  <center><img src="checkly-logo-dark.svg" alt="Checkly logo"></center>
-  <title>Check Frequency Calculator</title>  
-  <link href="StyleSheet.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Frequency Calculator</title>
+    <link href="StyleSheet.css" rel="stylesheet">
 </head>  
-<body onload="calculate()">  
+<body>
+    <center><img src="checkly-logo-dark.svg" alt="Checkly logo"></center>
+    <h1>Check Frequency Calculator</h1>
+    <div class="container">
+        <div class="form-content">
+            <div class="formstyle">
+                <form onsubmit="return false;" name="form1">
 
+                  <!-- Metric input section (SLA, Incidents, TTR, TTD) -->
 
-  <h1>Check Frequency Calculator</h1>
-  <div class="container">
-      <!-- Input and Results Sections -->
-      <div class="form-content">
-          <div class="formstyle">
-              <!-- Input Fields Section -->
-              <form onsubmit="return false;" name="form1">
-                  <div class="input-section">
-                      <div class="entry">
-                          <label class="entry-label">SLA Level*</label>
-                          <small class="description">Target service uptime percentage</small>
-                          <div class="input-group">
-                              <input type="text" name="sla-level">
-                              <span class="unit">%</span>
-                          </div>
-                      </div>
-  
-                      <div class="entry">
-                          <label class="entry-label">Allowed Downtime</label>
-                          <small class="description">Maximum monthly downtime as per SLA</small>
-                          <div class="input-group">
-                              <span class="result-display" id="downtime-value">0</span> <!-- Calculated value dynamically -->
-                              <span class="unit">min/month</span>
-                          </div>
-                      </div>
-  
-                      <div class="entry">
-                          <label class="entry-label">Incidents</label>
-                          <small class="description">Average number of incidents per month</small>
-                          <div class="input-group">
-                              <input type="text" name="incidents">
-                              <span class="unit">count/month</span>
-                          </div>
-                      </div>
-  
-                      <div class="entry">
-                          <label class="entry-label">TRR (Time to Recovery)</label>
-                          <small class="description">Average time to resolve each incident in minutes</small>
-                          <div class="input-group">
-                              <input type="text" name="trr">
-                              <span class="unit">min</span>
-                          </div>
-                      </div>
-  
-                      <div class="entry">
-                          <label class="entry-label">Actual Downtime</label>
-                          <small class="description">Total downtime for the month</small>
-                          <div class="input-group">
-                              <span class="result-display" id="downtime-value"></span> <!-- Calculated value dynamically -->
-                              <span class="unit">min/month</span>
-                          </div>
-                      </div>
-                  </div>
-              </form>
-          </div>
-  
-          <!-- Check Frequency Section -->
-          <div class="highlight-section">
-              <h2>Check Frequency</h2>
-              <small class="description">The optimal interval for your monitoring checks</small>
-              <div class="frequency-result">
-                  <span id="check-frequency">5</span> <!-- Calculated frequency dynamically -->
-                  <span class="unit">min interval</span>
-              </div>
-              <div class="check-support">
-                  <div class="check-type">
-                      <span>API Checks</span>
-                      <span class="support-icon">✔️</span> <!-- Update dynamically -->
-                  </div>
-                  <div class="check-type">
-                      <span>Browser Checks</span>
-                      <span class="support-icon">❌</span> <!-- Update dynamically -->
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-  
-  
-  
-<br>
-<br>
+                    <div class="input-section">
+                        <div class="entry">
+                            <label class="entry-label">SLA Level</label>
+                            <small class="description">Target service uptime percentage</small>
+                            <div class="input-group">
+                                <input type="text" id="sla-level" name="sla-level" placeholder="0">
+                                <span class="unit">%</span>
+                            </div>
+                        </div>
 
+                        <div class="entry">
+                            <label class="entry-label">Incidents</label>
+                            <small class="description">Estimated amount of incidents</small>
+                            <div class="input-group">
+                                <input type="text" id="incidents" name="incidents" placeholder="0">
+                                <span class="unit">per month</span>
+                            </div>
+                        </div>
 
+                        <div class="entry">
+                            <label class="entry-label">Time to Recovery</label>
+                            <small class="description">Estimated time to resolve an incident</small>
+                            <div class="input-group">
+                                <input type="text" id="ttr" name="ttr" placeholder="0">
+                                <span class="unit">minute(s)</span>
+                            </div>
+                        </div>
 
+                        <div class="entry">
+                            <label class="entry-label">Time to Detect</label>
+                            <small class="description">Maximum TTD equaling check frequency</small>
+                            <div class="input-group">
+                                <input type="text" id="ttd" name="ttd" placeholder="0">
+                                <span class="unit">minute(s)</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
 
-<label> Annual salary: EUR</label> <label id="SalaryInEUR" ></label> <label> / USD</label> <label id="SalaryInUSD" ></label>
-<div id="Message"> </div>
+            <!-- Result section -->
 
+            <div class="highlight-section">
+                <h2>Error Budget</h2>
+                <small class="description">Remaining downtime allowance per month</small>
+                <div class="frequency-result">
+                    <span id="error-budget">0 min</span>
+                </div>
 
-</form>  
+                <br>
+                <br>
+                <br>
 
-</div>  
+                <h2>Check Frequency</h2>
+                <small class="description">The selected interval for your checks</small>
+                <div class="frequency-result">
+                    <span id="check-frequency">0 min</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
-</body>  
-</html>  
+</body>
+
+</html>
+
 
 <script>
 
-   function numberWithCommas(x) {
-      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-   }
+function formatDuration(totalMinutes) {
+    if (isNaN(totalMinutes)) return "0 min";
 
-   function calculate() {
+    let isNegative = totalMinutes < 0;
+    totalMinutes = Math.abs(totalMinutes);
 
-   var role = document.getElementById("role").value;
-   var seniority = document.getElementById("seniority").value;
-   var locationFactor = document.getElementById("locationFactor").value;
-   var performanceFactor = document.getElementById("performanceFactor").value;
-  
+    // Convert minutes to total seconds 
+    let totalSeconds = Math.round(totalMinutes * 60);
+    const days = Math.floor(totalSeconds / (24 * 3600));
+    totalSeconds %= 24 * 3600;
+    const hours = Math.floor(totalSeconds / 3600);
+    totalSeconds %= 3600;
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
 
-   var  salaries= [
-       {role:"Engineering", seniority:"Junior", salary: "58401"},
-       {role:"Engineering", seniority:"Intermediate", salary: "77868"},
-       {role:"Engineering", seniority:"Senior", salary: "97335"},
-       {role:"Engineering", seniority:"Staff", salary: "135625"},
-       {role:"Engineering", seniority:"Lead", salary: "108500"},
-       {role:"Design", seniority:"Junior", salary: "51000"},
-       {role:"Design", seniority:"Intermediate", salary: "68000"},
-       {role:"Design", seniority:"Senior", salary: "85000"},
-       {role:"Product Management", seniority:"Junior", salary: "57000"},
-       {role:"Product Management", seniority:"Intermediate", salary: "76000"},
-       {role:"Product Management", seniority:"Senior", salary: "95000"},
-       {role:"Product Management", seniority:"Staff", salary: "128000"},
-       {role:"Support Engineer", seniority:"Junior", salary: "48750"},
-       {role:"Support Engineer", seniority:"Intermediate", salary: "65000"},
-       {role:"Support Engineer", seniority:"Senior", salary: "81250"},
-       {role:"SDR", seniority:"Junior", salary: "36450"},
-       {role:"SDR", seniority:"Intermediate", salary: "48600"},
-       {role:"SDR", seniority:"Senior", salary: "60750"},
-       {role:"Account Executive", seniority:"Junior", salary: "69185"},
-       {role:"Account Executive", seniority:"Intermediate", salary: "92247"},
-       {role:"Account Executive", seniority:"Senior", salary: "115308.65"},
-       {role:"Customer Solutions", seniority:"Junior", salary: "63293"},
-       {role:"Customer Solutions", seniority:"Intermediate", salary: "84391"},
-       {role:"Customer Solutions", seniority:"Senior", salary: "105489"},
-       {role:"Customer Solutions", seniority:"Staff", salary: "141964"},
-       {role:"People", seniority:"Junior", salary: "43500"},
-       {role:"People", seniority:"Intermediate", salary: "58000"},
-       {role:"People", seniority:"Senior", salary: "72500"},
-       {role:"People", seniority:"Director", salary: "112320"},
-       {role:"Operations", seniority:"Junior", salary: "43500"},
-       {role:"Operations", seniority:"Intermediate", salary: "58000"},
-       {role:"Operations", seniority:"Senior", salary: "72500"},
-       {role:"Operations", seniority:"Director", salary: "113000"},
-       {role:"Product Marketing", seniority:"Junior", salary: "62250"},
-       {role:"Product Marketing", seniority:"Intermediate", salary: "83000"},
-       {role:"Product Marketing", seniority:"Senior", salary: "103750"},
-       {role:"Growth Marketing", seniority:"Junior", salary: "62250"},
-       {role:"Growth Marketing", seniority:"Intermediate", salary: "83000"},
-       {role:"Growth Marketing", seniority:"Senior", salary: "103750"},
-   ];
+    // Build the formatted string
+    let parts = [];
+    if (days > 0) parts.push(`${days}d`);
+    if (hours > 0) parts.push(`${hours}h`);
+    if (minutes > 0) parts.push(`${minutes}m`);
+    if (seconds > 0) parts.push(`${seconds}s`);
+    
+    // If all parts are zero, display "0 min"
+    if (parts.length === 0) {
+        parts.push("0 min");
+    }
+
+    let formattedDuration = parts.join(' ');
+
+    if (isNegative) {
+        formattedDuration = `-${formattedDuration}`;
+    }
+
+    return formattedDuration;
+}
+
+function calculate() {
+    // Retrieve input values
+    let slaLevel = parseFloat(document.getElementById('sla-level').value);
+    let incidents = parseInt(document.getElementById('incidents').value);
+    let ttr = parseFloat(document.getElementById('ttr').value);
+    let ttd = parseFloat(document.getElementById('ttd').value);
+
+    // Total minutes in a 30-day month
+    const totalMinutesPerMonth = 30 * 24 * 60;
+
+    // Initialize errorBudget and checkFrequency
+    let errorBudget = 0;
+    let checkFrequency = 0;
+
+    // Validate slaLevel and calculate Error Budget if valid
+    if (!isNaN(slaLevel) && slaLevel > 0 && slaLevel < 100) {
+        // Calculate initial Error Budget based on SLA Level
+        errorBudget = ((100 - slaLevel) / 100) * totalMinutesPerMonth;
+
+        // Validate and set incidents, ttr, ttd to zero if invalid
+        if (isNaN(incidents) || incidents < 0) incidents = 0;
+        if (isNaN(ttr) || ttr < 0) ttr = 0;
+        if (isNaN(ttd) || ttd < 0) ttd = 0;
+
+        // Subtract time consumed by incidents (TTR + TTD per incident)
+        errorBudget -= incidents * (ttr + ttd);
+
+        // Set Check Frequency equal to TTD
+        checkFrequency = ttd;
+    } else {
+        // If slaLevel is invalid, set Error Budget and Check Frequency to zero
+        errorBudget = 0;
+        checkFrequency = 0;
+    }
+
+    // Format the Error Budget
+    const formattedErrorBudget = formatDuration(errorBudget);
+
+    // Format the Check Frequency
+    let formattedCheckFrequency;
+    if (checkFrequency % 1 === 0) {
+        // If it's a whole number, display without decimals
+        formattedCheckFrequency = `${checkFrequency} min`;
+    } else {
+        // Display with one decimal place
+        formattedCheckFrequency = `${checkFrequency.toFixed(1)} min`;
+    }
+
+    // Display the results
+    const errorBudgetElement = document.getElementById('error-budget');
+    errorBudgetElement.innerText = formattedErrorBudget;
+
+    // Change text color based on whether the Error Budget is negative
+    if (errorBudget < 0) {
+        errorBudgetElement.classList.add('negative-budget');
+    } else {
+        errorBudgetElement.classList.remove('negative-budget');
+    }
+
+    document.getElementById('check-frequency').innerText = formattedCheckFrequency;
+}
 
 
-  for (var r in salaries) {
+// Event listeners to recalculate when inputs change
+document.getElementById('sla-level').addEventListener('input', calculate);
+document.getElementById('incidents').addEventListener('input', calculate);
+document.getElementById('ttr').addEventListener('input', calculate);
+document.getElementById('ttd').addEventListener('input', calculate);
 
-     if (salaries[r]["role"] == role && salaries[r]["seniority"] == seniority ) {
-     
-     // The following ensures that Account Executive location factor cannot go above 1.2, e.g. even when in NYC.
-     if (role === "Account Executive") {
-        locationFactor = Math.min(1.2, locationFactor)
-     }
-     console.log("locationFactor: " ,locationFactor)
+// Initial calculation when the page loads
+calculate();
 
-    var salaryInEUR = salaries[r]["salary"] * performanceFactor * locationFactor;
-    console.log("salaries: " ,salaries[r])
-
-    document.getElementById('SalaryInEUR').innerHTML = numberWithCommas(Math.trunc(salaryInEUR));
-    document.getElementById('SalaryInUSD').innerHTML = numberWithCommas(Math.trunc(salaryInEUR * 1.084047));
-    document.getElementById('Message').innerHTML = "";break
-     } else{
-      document.getElementById('SalaryInEUR').innerHTML = "N/A";
-      document.getElementById('Message').innerHTML = "Unfortunaly we don't have this combination of role and seniority, so we can't give you a salary amount.";
-      document.getElementById('SalaryInUSD').innerHTML = "N/A";
-
-     }
-
-     
-
-  }
-
-   }
-</script>
+  </script>
+</body>
+</html>
