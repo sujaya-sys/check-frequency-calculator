@@ -1,1 +1,1 @@
-Preview: https://sujaya-sys.github.io/calculator/
+Preview: https://sujaya-sys.github.io/check-frequency-calculator/
