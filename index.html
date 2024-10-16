@@ -11,21 +11,21 @@
     <h1>Check Frequency Calculator</h1>
     <div class="container">
         <div class="form-content">
+            <!-- Input Panel -->
             <div class="formstyle">
                 <form onsubmit="return false;" name="form1">
-
-                  <!-- Metric input section (SLA, Incidents, TTR, TTD) -->
-
+                    <!-- Metric input section -->
                     <div class="input-section">
+                        <!-- SLA Level -->
                         <div class="entry">
                             <label class="entry-label">SLA Level</label>
                             <small class="description">Target service uptime percentage</small>
                             <div class="input-group">
-                                <input type="text" id="sla-level" name="sla-level">
+                                <input type="text" id="sla-level" name="sla-level" value="">
                                 <span class="unit">%</span>
                             </div>
                         </div>
-
+                        <!-- Incidents -->
                         <div class="entry">
                             <label class="entry-label">Incidents</label>
                             <small class="description">Estimated amount of incidents</small>
@@ -34,21 +34,21 @@
                                 <span class="unit">per month</span>
                             </div>
                         </div>
-
+                        <!-- Time to Recovery -->
                         <div class="entry">
                             <label class="entry-label">Time to Recovery</label>
                             <small class="description">Estimated time to resolve an incident</small>
                             <div class="input-group">
-                                <input type="text" id="ttr" name="ttr">
+                                <input type="text" id="ttr" name="ttr" value="">
                                 <span class="unit">minute(s)</span>
                             </div>
                         </div>
-
+                        <!-- Time to Detect -->
                         <div class="entry">
                             <label class="entry-label">Time to Detect</label>
                             <small class="description">Maximum TTD equaling check frequency</small>
                             <div class="input-group">
-                                <input type="text" id="ttd" name="ttd">
+                                <input type="text" id="ttd" name="ttd" value="">
                                 <span class="unit">minute(s)</span>
                             </div>
                         </div>
@@ -56,150 +56,224 @@
                 </form>
             </div>
 
-            <!-- Result section -->
-
+            <!-- Result Panel -->
             <div class="highlight-section">
+                <!-- Error Budget -->
                 <h2>Error Budget</h2>
                 <small class="description">Remaining downtime allowance per month</small>
                 <div class="frequency-result">
                     <span id="error-budget">0 min</span>
                 </div>
 
-                <br>
-                <br>
-                <br>
-
+                <!-- Check Frequency -->
                 <h2>Check Frequency</h2>
-                <small class="description">The selected interval for your checks</small>
+                <small class="description">Based on provided TTD</small>
                 <div class="frequency-result">
                     <span id="check-frequency">0 min</span>
                 </div>
-            </div>
-        </div>
-    </div>
 
-</body>
+                <!-- Available Check Frequencies -->
+                <div class="available-frequencies">
+                    <div class="frequency-item" id="frequency-recommendation">
+                    </div>
+                </div>
+            </div> 
+        </div> 
+    </div> 
 
-</html>
+    <!-- JavaScript Code -->
+    <script>
+    const apiFrequencies = [
+        10, 20, 30, 60, 120, 300, 600, 900,
+        1800, 3600, 7200, 10800, 21600, 43200, 86400
+    ];
 
+    const browserFrequencies = [
+        60, 120, 300, 600, 900, 1800,
+        3600, 7200, 10800, 21600, 43200, 86400
+    ];
 
-<script>
+    function formatDuration(totalMinutes) {
+        if (isNaN(totalMinutes)) return "0 min";
 
-function formatDuration(totalMinutes) {
-    if (isNaN(totalMinutes)) return "0 min";
+        let isNegative = totalMinutes < 0;
+        totalMinutes = Math.abs(totalMinutes);
 
-    let isNegative = totalMinutes < 0;
-    totalMinutes = Math.abs(totalMinutes);
+        let totalSeconds = Math.round(totalMinutes * 60);
+        const days = Math.floor(totalSeconds / (24 * 3600));
+        totalSeconds %= 24 * 3600;
+        const hours = Math.floor(totalSeconds / 3600);
+        totalSeconds %= 3600;
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
 
-    // Convert minutes to total seconds 
-    let totalSeconds = Math.round(totalMinutes * 60);
-    const days = Math.floor(totalSeconds / (24 * 3600));
-    totalSeconds %= 24 * 3600;
-    const hours = Math.floor(totalSeconds / 3600);
-    totalSeconds %= 3600;
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
+        let parts = [];
+        if (days > 0) parts.push(`${days}d`);
+        if (hours > 0) parts.push(`${hours}h`);
+        if (minutes > 0) parts.push(`${minutes}m`);
+        if (seconds > 0) parts.push(`${seconds}s`);
 
-    // Build the formatted string
-    let parts = [];
-    if (days > 0) parts.push(`${days}d`);
-    if (hours > 0) parts.push(`${hours}h`);
-    if (minutes > 0) parts.push(`${minutes}m`);
-    if (seconds > 0) parts.push(`${seconds}s`);
-    
-    // If all parts are zero, display "0 min"
-    if (parts.length === 0) {
-        parts.push("0 min");
-    }
-
-    let formattedDuration = parts.join(' ');
-
-    if (isNegative) {
-        formattedDuration = `-${formattedDuration}`;
-    }
-
-    return formattedDuration;
-}
-
-function calculate() {
-    // Retrieve input values
-    let slaLevel = parseFloat(document.getElementById('sla-level').value);
-    let incidentsInput = document.getElementById('incidents').value;
-    let ttr = parseFloat(document.getElementById('ttr').value);
-    let ttd = parseFloat(document.getElementById('ttd').value);
-
-    // Total minutes in a 30-day month
-    const totalMinutesPerMonth = 30 * 24 * 60;
-
-    // Initialize errorBudget and checkFrequency
-    let errorBudget = 0;
-    let checkFrequency = 0;
-
-    // Validate slaLevel and calculate Error Budget if valid
-    if (!isNaN(slaLevel) && slaLevel > 0 && slaLevel < 100) {
-        // Calculate initial Error Budget based on SLA Level
-        errorBudget = ((100 - slaLevel) / 100) * totalMinutesPerMonth;
-
-        // Validate and set incidents to 1 if input is empty
-        let incidents = parseInt(incidentsInput);
-        if (incidentsInput.trim() === '') {
-            incidents = 1;
-        } else if (isNaN(incidents) || incidents < 0) {
-            incidents = 1;
+        if (parts.length === 0) {
+            parts.push("0 min");
         }
 
-        // Validate TTR and TTD
-        if (isNaN(ttr) || ttr < 0) ttr = 0;
-        if (isNaN(ttd) || ttd < 0) ttd = 0;
+        let formattedDuration = parts.join(' ');
 
-        // Subtract time consumed by incidents (TTR + TTD per incident)
-        errorBudget -= incidents * (ttr + ttd);
+        if (isNegative) {
+            formattedDuration = `-${formattedDuration}`;
+        }
 
-        // Set Check Frequency equal to TTD
-        checkFrequency = ttd;
-    } else {
-        // If slaLevel is invalid, set Error Budget and Check Frequency to zero
-        errorBudget = 0;
-        checkFrequency = 0;
+        return formattedDuration;
     }
 
-    // Format the Error Budget
-    const formattedErrorBudget = formatDuration(errorBudget);
-
-    // Format the Check Frequency
-    let formattedCheckFrequency;
-    if (checkFrequency % 1 === 0) {
-        // If it's a whole number, display without decimals
-        formattedCheckFrequency = `${checkFrequency} min`;
-    } else {
-        // Display with one decimal place
-        formattedCheckFrequency = `${checkFrequency.toFixed(1)} min`;
+    function formatFrequency(seconds) {
+        if (seconds < 60) {
+            return `${seconds} sec`;
+        } else if (seconds < 3600) {
+            const minutes = seconds / 60;
+            return `${minutes % 1 === 0 ? minutes : minutes.toFixed(1)} min`;
+        } else {
+            const hours = seconds / 3600;
+            return `${hours % 1 === 0 ? hours : hours.toFixed(1)} hr`;
+        }
     }
 
-    // Display the results
-    const errorBudgetElement = document.getElementById('error-budget');
-    errorBudgetElement.innerText = formattedErrorBudget;
-
-    // Change text color based on whether the Error Budget is negative
-    if (errorBudget < 0) {
-        errorBudgetElement.classList.add('negative-budget');
-    } else {
-        errorBudgetElement.classList.remove('negative-budget');
+    function getNextAvailableFrequency(calculatedFrequencyInSeconds, frequenciesArray) {
+        let availableFrequencies = frequenciesArray.filter(freq => freq <= calculatedFrequencyInSeconds);
+        if (availableFrequencies.length === 0) {
+            return null;
+        }
+        return Math.max(...availableFrequencies);
     }
 
-    document.getElementById('check-frequency').innerText = formattedCheckFrequency;
-}
+    function calculate() {
+        let slaLevel = parseFloat(document.getElementById('sla-level').value);
+        let incidentsInput = document.getElementById('incidents').value;
+        let ttr = parseFloat(document.getElementById('ttr').value);
+        let ttd = parseFloat(document.getElementById('ttd').value);
 
+        const totalMinutesPerMonth = 30 * 24 * 60;
 
-// Event listeners to recalculate when inputs change
-document.getElementById('sla-level').addEventListener('input', calculate);
-document.getElementById('incidents').addEventListener('input', calculate);
-document.getElementById('ttr').addEventListener('input', calculate);
-document.getElementById('ttd').addEventListener('input', calculate);
+        let errorBudget = 0;
+        let checkFrequency = ttd;
+        let formattedApiFrequency = 'N/A';
+        let formattedBrowserFrequency = 'N/A';
+        let formattedCheckFrequency = 'N/A';
 
-// Initial calculation when the page loads
-calculate();
+        if (!isNaN(slaLevel) && slaLevel > 0 && slaLevel < 100) {
+            const initialErrorBudget = ((100 - slaLevel) / 100) * totalMinutesPerMonth;
 
-  </script>
+            let incidents = parseInt(incidentsInput);
+            if (incidentsInput.trim() === '') {
+                incidents = 1;
+            } else if (isNaN(incidents) || incidents <= 0) {
+                incidents = 1;
+            }
+
+            if (isNaN(ttr) || ttr < 0) ttr = 0;
+            if (isNaN(ttd) || ttd < 0) ttd = 0;
+
+            errorBudget = initialErrorBudget - incidents * (ttr + ttd);
+
+            if (errorBudget < 0) {
+                let minTTD = (initialErrorBudget / incidents) - ttr;
+                if (minTTD <= 0) {
+                    formattedApiFrequency = 'N/A';
+                    formattedBrowserFrequency = 'N/A';
+                    formattedCheckFrequency = `${checkFrequency % 1 === 0 ? checkFrequency : checkFrequency.toFixed(2)} min`;
+
+                    document.getElementById('frequency-recommendation').innerHTML = `
+                        <strong>Recommended</strong><br>
+                        Not achievable with current inputs
+                    `;
+                } else {
+                    let minTTDInSeconds = minTTD * 60;
+
+                    let apiFrequencyInSeconds = getNextAvailableFrequency(minTTDInSeconds, apiFrequencies);
+                    if (apiFrequencyInSeconds !== null) {
+                        formattedApiFrequency = formatFrequency(apiFrequencyInSeconds);
+                    } else {
+                        formattedApiFrequency = 'N/A';
+                    }
+
+                    let browserFrequencyInSeconds = getNextAvailableFrequency(minTTDInSeconds, browserFrequencies);
+                    if (browserFrequencyInSeconds !== null) {
+                        formattedBrowserFrequency = formatFrequency(browserFrequencyInSeconds);
+                    } else {
+                        formattedBrowserFrequency = 'N/A';
+                    }
+
+                    formattedCheckFrequency = `${checkFrequency % 1 === 0 ? checkFrequency : checkFrequency.toFixed(2)} min`;
+
+                    document.getElementById('frequency-recommendation').innerHTML = `
+                        <strong>Recommended</strong><br>
+                        API check: ${formattedApiFrequency}<br>
+                        Browser check: ${formattedBrowserFrequency}
+                    `;
+                }
+            } else {
+                let checkFrequencyInSeconds = checkFrequency * 60;
+                let apiFrequencyInSeconds = getNextAvailableFrequency(checkFrequencyInSeconds, apiFrequencies);
+                if (apiFrequencyInSeconds !== null) {
+                    formattedApiFrequency = formatFrequency(apiFrequencyInSeconds);
+                } else {
+                    formattedApiFrequency = 'N/A';
+                }
+
+                let browserFrequencyInSeconds = getNextAvailableFrequency(checkFrequencyInSeconds, browserFrequencies);
+                if (browserFrequencyInSeconds !== null) {
+                    formattedBrowserFrequency = formatFrequency(browserFrequencyInSeconds);
+                } else {
+                    formattedBrowserFrequency = 'N/A';
+                }
+
+                if (checkFrequency > 0) {
+                    formattedCheckFrequency = `${checkFrequency % 1 === 0 ? checkFrequency : checkFrequency.toFixed(2)} min`;
+                } else {
+                    formattedCheckFrequency = 'N/A';
+                }
+
+                document.getElementById('frequency-recommendation').innerHTML = `
+                    <strong>Checkly API check:</strong> ${formattedApiFrequency}<br>
+                    <strong>Checkly browser check:</strong> ${formattedBrowserFrequency}
+                `;
+            }
+        } else {
+            errorBudget = 0;
+            checkFrequency = 0;
+            formattedApiFrequency = 'N/A';
+            formattedBrowserFrequency = 'N/A';
+            formattedCheckFrequency = 'N/A';
+
+            document.getElementById('frequency-recommendation').innerHTML = `
+                <strong>Checkly API check:</strong> N/A<br>
+                <strong>Checkly browser check:</strong> N/A
+            `;
+        }
+
+        const formattedErrorBudget = formatDuration(errorBudget);
+
+        const errorBudgetElement = document.getElementById('error-budget');
+        errorBudgetElement.innerText = formattedErrorBudget;
+
+        if (errorBudget < 0) {
+            errorBudgetElement.classList.add('negative-budget');
+        } else {
+            errorBudgetElement.classList.remove('negative-budget');
+        }
+
+        document.getElementById('check-frequency').innerText = formattedCheckFrequency;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('sla-level').addEventListener('input', calculate);
+        document.getElementById('incidents').addEventListener('input', calculate);
+        document.getElementById('ttr').addEventListener('input', calculate);
+        document.getElementById('ttd').addEventListener('input', calculate);
+
+        calculate();
+    });
+
+    </script>
 </body>
 </html>
