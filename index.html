@@ -28,7 +28,7 @@
                         <!-- Incidents -->
                         <div class="entry">
                             <label class="entry-label">Incidents</label>
-                            <small class="description">Estimated amount of incidents</small>
+                            <small class="description">Estimated amount of incidents - default: 1</small>
                             <div class="input-group">
                                 <input type="text" id="incidents" name="incidents">
                                 <span class="unit">per month</span>
@@ -147,123 +147,129 @@
     }
 
     function calculate() {
-        let slaLevel = parseFloat(document.getElementById('sla-level').value);
-        let incidentsInput = document.getElementById('incidents').value;
-        let ttr = parseFloat(document.getElementById('ttr').value);
-        let ttd = parseFloat(document.getElementById('ttd').value);
+    let slaLevel = parseFloat(document.getElementById('sla-level').value);
+    let incidentsInput = document.getElementById('incidents').value;
+    let ttr = parseFloat(document.getElementById('ttr').value);
+    let ttd = parseFloat(document.getElementById('ttd').value);
 
-        const totalMinutesPerMonth = 30 * 24 * 60;
+    const totalMinutesPerMonth = 30 * 24 * 60;
 
-        let errorBudget = 0;
-        let checkFrequency = ttd;
-        let formattedApiFrequency = 'N/A';
-        let formattedBrowserFrequency = 'N/A';
-        let formattedCheckFrequency = 'N/A';
+    let errorBudget = 0;
+    let checkFrequency = ttd;
+    let formattedApiFrequency = 'N/A';
+    let formattedBrowserFrequency = 'N/A';
+    let formattedCheckFrequency = 'N/A';
 
-        if (!isNaN(slaLevel) && slaLevel > 0 && slaLevel < 100) {
-            const initialErrorBudget = ((100 - slaLevel) / 100) * totalMinutesPerMonth;
+    if (!isNaN(slaLevel) && slaLevel > 0 && slaLevel < 100) {
+        const initialErrorBudget = ((100 - slaLevel) / 100) * totalMinutesPerMonth;
 
-            let incidents = parseInt(incidentsInput);
-            if (incidentsInput.trim() === '') {
-                incidents = 1;
-            } else if (isNaN(incidents) || incidents <= 0) {
-                incidents = 1;
-            }
+        let incidents = parseInt(incidentsInput);
+        if (incidentsInput.trim() === '') {
+            incidents = 1;
+        } else if (isNaN(incidents) || incidents <= 0) {
+            incidents = 1;
+        }
 
-            if (isNaN(ttr) || ttr < 0) ttr = 0;
-            if (isNaN(ttd) || ttd < 0) ttd = 0;
+        if (isNaN(ttr) || ttr < 0) ttr = 0;
+        if (isNaN(ttd) || ttd < 0) ttd = 0;
 
-            errorBudget = initialErrorBudget - incidents * (ttr + ttd);
+        // Calculate the error budget
+        errorBudget = initialErrorBudget - incidents * (ttr + ttd);
 
-            if (errorBudget < 0) {
-                let minTTD = (initialErrorBudget / incidents) - ttr;
-                if (minTTD <= 0) {
-                    formattedApiFrequency = 'N/A';
-                    formattedBrowserFrequency = 'N/A';
-                    formattedCheckFrequency = `${checkFrequency % 1 === 0 ? checkFrequency : checkFrequency.toFixed(2)} min`;
+        // Handle NaN for checkFrequency
+        if (isNaN(checkFrequency) || checkFrequency <= 0) {
+            formattedCheckFrequency = 'N/A';
+        } else {
+            formattedCheckFrequency = `${checkFrequency % 1 === 0 ? checkFrequency : checkFrequency.toFixed(2)} min`;
+        }
 
-                    document.getElementById('frequency-recommendation').innerHTML = `
-                        <strong>Recommended</strong><br>
-                        Not achievable with current inputs
-                    `;
-                } else {
-                    let minTTDInSeconds = minTTD * 60;
+        if (errorBudget < 0) {
+            // Calculate minimum TTD required to bring error budget to zero
+            let minTTD = (initialErrorBudget / incidents) - ttr;
+            if (minTTD <= 0) {
+                // Impossible to achieve non-negative error budget
+                formattedApiFrequency = 'N/A';
+                formattedBrowserFrequency = 'N/A';
 
-                    let apiFrequencyInSeconds = getNextAvailableFrequency(minTTDInSeconds, apiFrequencies);
-                    if (apiFrequencyInSeconds !== null) {
-                        formattedApiFrequency = formatFrequency(apiFrequencyInSeconds);
-                    } else {
-                        formattedApiFrequency = 'N/A';
-                    }
-
-                    let browserFrequencyInSeconds = getNextAvailableFrequency(minTTDInSeconds, browserFrequencies);
-                    if (browserFrequencyInSeconds !== null) {
-                        formattedBrowserFrequency = formatFrequency(browserFrequencyInSeconds);
-                    } else {
-                        formattedBrowserFrequency = 'N/A';
-                    }
-
-                    formattedCheckFrequency = `${checkFrequency % 1 === 0 ? checkFrequency : checkFrequency.toFixed(2)} min`;
-
-                    document.getElementById('frequency-recommendation').innerHTML = `
-                        <strong>Recommended</strong><br>
-                        API check: ${formattedApiFrequency}<br>
-                        Browser check: ${formattedBrowserFrequency}
-                    `;
-                }
+                document.getElementById('frequency-recommendation').innerHTML = `
+                    <strong>Error Budget Exceeded</strong><br>
+                `;
             } else {
-                let checkFrequencyInSeconds = checkFrequency * 60;
-                let apiFrequencyInSeconds = getNextAvailableFrequency(checkFrequencyInSeconds, apiFrequencies);
+                let minTTDInSeconds = minTTD * 60;
+
+                // For API checks
+                let apiFrequencyInSeconds = getNextAvailableFrequency(minTTDInSeconds, apiFrequencies);
                 if (apiFrequencyInSeconds !== null) {
                     formattedApiFrequency = formatFrequency(apiFrequencyInSeconds);
                 } else {
                     formattedApiFrequency = 'N/A';
                 }
 
-                let browserFrequencyInSeconds = getNextAvailableFrequency(checkFrequencyInSeconds, browserFrequencies);
+                // For Browser checks
+                let browserFrequencyInSeconds = getNextAvailableFrequency(minTTDInSeconds, browserFrequencies);
                 if (browserFrequencyInSeconds !== null) {
                     formattedBrowserFrequency = formatFrequency(browserFrequencyInSeconds);
                 } else {
                     formattedBrowserFrequency = 'N/A';
                 }
 
-                if (checkFrequency > 0) {
-                    formattedCheckFrequency = `${checkFrequency % 1 === 0 ? checkFrequency : checkFrequency.toFixed(2)} min`;
-                } else {
-                    formattedCheckFrequency = 'N/A';
-                }
-
+                // Provide recommendations without changing the checkFrequency
                 document.getElementById('frequency-recommendation').innerHTML = `
-                    <strong>Checkly API check:</strong> ${formattedApiFrequency}<br>
-                    <strong>Checkly browser check:</strong> ${formattedBrowserFrequency}
+                    <strong>Recommended Check Frequencies</strong><br>
+                    Checkly API check: ${formattedApiFrequency}<br>
+                    Checkly Browser check: ${formattedBrowserFrequency}
                 `;
             }
         } else {
-            errorBudget = 0;
-            checkFrequency = 0;
-            formattedApiFrequency = 'N/A';
-            formattedBrowserFrequency = 'N/A';
-            formattedCheckFrequency = 'N/A';
+            // Error budget is positive
+            let checkFrequencyInSeconds = checkFrequency * 60;
+            let apiFrequencyInSeconds = getNextAvailableFrequency(checkFrequencyInSeconds, apiFrequencies);
+            if (apiFrequencyInSeconds !== null) {
+                formattedApiFrequency = formatFrequency(apiFrequencyInSeconds);
+            } else {
+                formattedApiFrequency = 'N/A';
+            }
 
+            let browserFrequencyInSeconds = getNextAvailableFrequency(checkFrequencyInSeconds, browserFrequencies);
+            if (browserFrequencyInSeconds !== null) {
+                formattedBrowserFrequency = formatFrequency(browserFrequencyInSeconds);
+            } else {
+                formattedBrowserFrequency = 'N/A';
+            }
+
+            // Display the frequencies
             document.getElementById('frequency-recommendation').innerHTML = `
-                <strong>Checkly API check:</strong> N/A<br>
-                <strong>Checkly browser check:</strong> N/A
+                <strong>Recommended Check Frequencies</strong><br>
+                Checkly API check: ${formattedApiFrequency}<br>
+                Checkly browser check: ${formattedBrowserFrequency}
             `;
         }
+    } else {
+        // Invalid SLA level
+        errorBudget = 0;
+        formattedCheckFrequency = 'N/A';
+        formattedApiFrequency = 'N/A';
+        formattedBrowserFrequency = 'N/A';
 
-        const formattedErrorBudget = formatDuration(errorBudget);
-
-        const errorBudgetElement = document.getElementById('error-budget');
-        errorBudgetElement.innerText = formattedErrorBudget;
-
-        if (errorBudget < 0) {
-            errorBudgetElement.classList.add('negative-budget');
-        } else {
-            errorBudgetElement.classList.remove('negative-budget');
-        }
-
-        document.getElementById('check-frequency').innerText = formattedCheckFrequency;
+        document.getElementById('frequency-recommendation').innerHTML = `
+            Please enter a valid SLA level
+        `;
     }
+
+    const formattedErrorBudget = formatDuration(errorBudget);
+
+    // Display the results
+    const errorBudgetElement = document.getElementById('error-budget');
+    errorBudgetElement.innerText = formattedErrorBudget;
+
+    if (errorBudget < 0) {
+        errorBudgetElement.classList.add('negative-budget');
+    } else {
+        errorBudgetElement.classList.remove('negative-budget');
+    }
+
+    document.getElementById('check-frequency').innerText = formattedCheckFrequency;
+}
 
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('sla-level').addEventListener('input', calculate);
